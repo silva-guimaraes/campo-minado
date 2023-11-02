@@ -16,19 +16,21 @@ let fields = Array.from(Array(ROWS), () => Array(COLUMNS));
 for (let y = 0; y < fields.length; y++) {
     for (let x = 0; x < fields[y].length; x++) {
 
-        let foo = document.createElement('button');
-        foo.className = 'field';
-        foo.style.backgroundColor = 'gray';
-        foo.onclick = () => uncover(x, y);
+        let field = document.createElement('button');
+        field.className = 'field';
+        field.style.backgroundColor = 'gray';
+        field.onclick = () => uncover(x, y);
 
         fields[y][x] = {
-            element: foo,
+            element: field,
             value: 0,
             clicked: false,
             bomb: false,
         };
+        grid.append(field);
     }
 }
+
 
 for (let i = 0; i < BOMBS; i++) {
     let row = getRandomInt(ROWS);
@@ -55,14 +57,8 @@ for (let i = 0; i < BOMBS; i++) {
     fields[row][column].bomb = true;
 }
 
-fields.map((x) => x.map((y) => grid.append(y.element)));
-
 
 function uncover(x, y) {
-    if (x < 0 || x >= COLUMNS)
-        return;
-    if (y < 0 || y >= ROWS)
-        return;
 
     let field = fields[y][x];
 
@@ -91,6 +87,7 @@ function uncover(x, y) {
         field.element.style.backgroundColor = 'lightgray';
 
         if (fields.every((x) => x.every((y) => y.clicked || y.bomb))) {
+            gameOver = true;
             alert('vitoria!')
         }
 
@@ -100,7 +97,12 @@ function uncover(x, y) {
     field.element.style.backgroundColor = 'lightgray';
 
     for (let i = y-1; i <= y+1; i++) {
-        for (let j = x-1; j <= x+1; j++)
+        for (let j = x-1; j <= x+1; j++) {
+            if (j < 0 || j >= COLUMNS)
+                continue;
+            if (i < 0 || i >= ROWS)
+                continue;
             uncover(j, i);
+        }
     }
 }
