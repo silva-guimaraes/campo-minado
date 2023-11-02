@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html, body { 
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+        html {
+            background-color: rgb(80, 80, 80);
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(20, 1fr);
+            grid-template-rows: repeat(10, 1fr);
+            grid-column-gap: 0px;
+            grid-row-gap: 0px;
+            grid-gap: 2px;
+        }
+        .field {
+            filter: drop-shadow(2px 2px 2px black);
+            background-color: gray;
+            height: 30px;
+            width: 30px;
+            border-radius: 10% 10%;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <main id="grid">
+    </main>
+
+</body>
+<script src="index.js"></script>
+
+</html>
