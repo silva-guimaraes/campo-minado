@@ -27,7 +27,7 @@ for (let y = 0; y < fields.length; y++) {
         fields[y][x] = {
             element: field,
             value: 0,
-            clicked: false,
+            uncovered: false,
             bomb: false,
             flag: false,
         };
@@ -81,14 +81,14 @@ function uncover(x, y, which) {
 
     // não desocultar campos já desocultados. impede que a recursão entre em um 
     // loop infinito
-    if (field.clicked) {
+    if (field.uncovered && which == -1) {
         return;
     }
 
+
     // por/remover bandeiras
     // 3 == botão direito
-    console.log(which);
-    if (which == 3) {
+    if (which == 3 && !field.uncovered) {
         field.element.style.backgroundColor = field.flag ? 'gray' : 'blue';
         field.flag = !field.flag;
         return;
@@ -98,7 +98,51 @@ function uncover(x, y, which) {
         return;
     }
 
-    field.clicked = true;
+    // chording
+    // chording é quando o jogador aperta em um campo de risco N e caso haja
+    // N bandeiras adjacentes, todos os outros campos são desocultados automaticamente
+    if (field.uncovered && field.value > 0) {
+
+        let adjacentFlags = 0
+
+        // contar bandeiras adjacentes
+        for (let i = y-1; i <= y+1; i++) {
+            for (let j = x-1; j <= x+1; j++) {
+
+                if (i == y && j == x)
+                    continue;
+                if (j < 0 || j >= COLUMNS)
+                    continue;
+                if (i < 0 || i >= ROWS)
+                    continue;
+
+                if (fields[i][j].flag)
+                    adjacentFlags++;
+            }
+        }
+
+        // descobrir campos adjacentes se numero de baideiras é 
+        // igual ao risco do campo
+        if (adjacentFlags == field.value) {
+            for (let i = y-1; i <= y+1; i++) {
+                for (let j = x-1; j <= x+1; j++) {
+
+                    if (i == y && j == x)
+                        continue;
+                    if (j < 0 || j >= COLUMNS)
+                        continue;
+                    if (i < 0 || i >= ROWS)
+                        continue;
+                    if (fields[i][j].flag)
+                        continue;
+
+                    uncover(j, i, -1);
+                }
+            }
+        }
+    }
+
+    field.uncovered = true;
 
     // 3 tipos de campos existem no campo minado: campos com bomba, campos com risco e
     // campos vazios
@@ -121,7 +165,7 @@ function uncover(x, y, which) {
         field.element.style.backgroundColor = 'lightgray';
 
         // verifica se todos os campos que não sejam bombas foram desocultados
-        if (fields.every((x) => x.every((y) => y.clicked || y.bomb))) {
+        if (fields.every((x) => x.every((y) => y.uncovered || y.bomb))) {
             gameOver = true;
             alert('vitoria!')
         }
@@ -141,7 +185,7 @@ function uncover(x, y, which) {
                 continue;
             if (i < 0 || i >= ROWS)
                 continue;
-            uncover(j, i, 'which?');
+            uncover(j, i, -1);
         }
     }
 }
