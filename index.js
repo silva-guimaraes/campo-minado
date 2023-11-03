@@ -6,7 +6,7 @@ function getRandomInt(max) {
 
 const ROWS = 10;
 const COLUMNS = 20;
-const BOMBS = 50;
+const BOMBS = 10;
 let flagsCounter = 0;
 let timer = 0;
 let gameOver = false;
@@ -14,6 +14,9 @@ let gameOver = false;
 let grid = document.querySelector('#grid');
 let flagsLabel = document.querySelector("#flags");
 let bombsLabel = document.querySelector("#bombs");
+
+let timerLabel = document.querySelector('#timer');
+let flagBombs = document.querySelector('#flags-bombs');
 
 bombsLabel.innerText = BOMBS;
 flagsLabel.innerText = flagsCounter;
@@ -164,12 +167,23 @@ function uncover(x, y, which) {
 
     // caso esse campo seja uma bomba
     if (field.bomb) {
-        field.element.innerHTML = '💣';
-        field.element.style.backgroundColor = 'red';
+        fields.flat()
+            .filter((x) => x.bomb)
+            .map((x) => {
+                x.element.innerHTML = '💣';
+                x.element.style.backgroundColor = x.flag ? 'green' : 'red';
+            });
+
+        field.element.innerHTML = 'X';
         gameOver = true;
         clearInterval(timer);
         console.log(timer);
         timer = 0;
+
+        flagBombs.style.color = 'red';
+        timerLabel.style.color = 'red';
+
+
         
         // alert('game over');
         return;
@@ -183,11 +197,21 @@ function uncover(x, y, which) {
         field.element.style.backgroundColor = 'lightgray';
 
         // verifica se todos os campos que não sejam bombas foram desocultados
-        if (fields.every((x) => x.every((y) => y.uncovered || y.bomb))) {
+        if (fields.flat().every((y) => y.uncovered || y.bomb)) {
             gameOver = true;
             alert('vitoria!')
             clearInterval(timer);
             console.log(timer);
+            flagBombs.style.color = 'green';
+            timerLabel.style.color = 'green';
+            flagBombs.style.fontWeight = 'bold';
+            timerLabel.style.fontWeight = 'bold';
+            fields.flat()
+                .filter((x) => x.bomb)
+                .map((x) => {
+                    x.element.innerHTML = '💣';
+                    x.element.style.backgroundColor = x.flag ? 'green' : 'magenta';
+                });
             timer = 0;
         }
 
