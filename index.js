@@ -182,10 +182,9 @@ function uncover(x, y, which) {
 
         flagBombs.style.color = 'red';
         timerLabel.style.color = 'red';
+        flagBombs.style.fontWeight = 'bold';
+        timerLabel.style.fontWeight = 'bold';
 
-
-        
-        // alert('game over');
         return;
     }
 
@@ -199,7 +198,6 @@ function uncover(x, y, which) {
         // verifica se todos os campos que não sejam bombas foram desocultados
         if (fields.flat().every((y) => y.uncovered || y.bomb)) {
             gameOver = true;
-            alert('vitoria!')
             clearInterval(timer);
             console.log(timer);
             flagBombs.style.color = 'green';
