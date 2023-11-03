@@ -4,12 +4,20 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-let grid = document.querySelector('#grid');
-
 const ROWS = 10;
 const COLUMNS = 20;
-const BOMBS = 20;
+const BOMBS = 50;
+let flagsCounter = 0;
+let timer = 0;
 let gameOver = false;
+
+let grid = document.querySelector('#grid');
+let flagsLabel = document.querySelector("#flags");
+let bombsLabel = document.querySelector("#bombs");
+
+bombsLabel.innerText = BOMBS;
+flagsLabel.innerText = flagsCounter;
+
 
 // criar array 2d de todos os campos
 let fields = Array.from(Array(ROWS), () => Array(COLUMNS));
@@ -74,6 +82,9 @@ function uncover(x, y, which) {
 
     let field = fields[y][x];
 
+    if (!timer)
+        timer = setInterval(setTime, 1000);
+
     // não fazer nada caso jogo já tenha terminado
     if (gameOver) {
         return;
@@ -90,7 +101,11 @@ function uncover(x, y, which) {
     // 3 == botão direito
     if (which == 3 && !field.uncovered) {
         field.element.style.backgroundColor = field.flag ? 'gray' : 'blue';
+
         field.flag = !field.flag;
+
+        flagsCounter += field.flag ? 1 : -1;
+        flagsLabel.innerHTML = flagsCounter;
         return;
     }
 
@@ -121,9 +136,9 @@ function uncover(x, y, which) {
             }
         }
 
-        // descobrir campos adjacentes se numero de baideiras é 
+        // desocultar campos adjacentes se numero de baideiras é 
         // igual ao risco do campo
-        if (adjacentFlags == field.value) {
+        if (adjacentFlags >= field.value) {
             for (let i = y-1; i <= y+1; i++) {
                 for (let j = x-1; j <= x+1; j++) {
 
@@ -152,6 +167,9 @@ function uncover(x, y, which) {
         field.element.innerHTML = '💣';
         field.element.style.backgroundColor = 'red';
         gameOver = true;
+        clearInterval(timer);
+        console.log(timer);
+        timer = 0;
         
         // alert('game over');
         return;
@@ -177,7 +195,6 @@ function uncover(x, y, which) {
 
     field.element.style.backgroundColor = 'lightgray';
 
-    // um campo vazio nunca possui uma bomba por perto.
     // desocultar campos adjacentes:
     for (let i = y-1; i <= y+1; i++) {
         for (let j = x-1; j <= x+1; j++) {
@@ -189,3 +206,27 @@ function uncover(x, y, which) {
         }
     }
 }
+
+// https://stackoverflow.com/a/5517836
+let minutesLabel = document.querySelector("#minutes");
+let secondsLabel = document.querySelector("#seconds");
+let totalSeconds = 0;
+
+function setTime() {
+    ++totalSeconds;
+    secondsLabel.innerHTML = pad(totalSeconds % 60);
+    minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+}
+
+function pad(val) {
+
+    var valString = val + "";
+
+    if (valString.length < 2)
+        return "0" + valString;
+    else 
+        return valString;
+}
+
+
+

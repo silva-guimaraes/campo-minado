@@ -20,6 +20,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
         }
         #grid {
             display: grid;
@@ -37,13 +38,23 @@
             /* border-radius: 10% 10%; */
             font-weight: bold;
         }
+        p {
+            font-family: serif;
+        }
+        #menu {
+            display: flex;
+            gap: 50px;
+        }
     </style>
 </head>
 
 <body>
     <main id="grid">
     </main>
-
+    <div id="menu">
+        <p><span id="minutes">00</span>:<span id="seconds">00</span></p>
+        <p><span id="flags"></span>/<span id="bombs"></span></p>
+    </div>
 </body>
 <script src="index.js"></script>
 
