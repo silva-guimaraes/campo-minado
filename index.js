@@ -186,6 +186,9 @@ function uncover(x, y, which) {
         if (fields.every((x) => x.every((y) => y.uncovered || y.bomb))) {
             gameOver = true;
             alert('vitoria!')
+            clearInterval(timer);
+            console.log(timer);
+            timer = 0;
         }
 
         return;
