@@ -6,7 +6,7 @@ function getRandomInt(max) {
 
 const ROWS = 10;
 const COLUMNS = 20;
-const BOMBS = 10;
+const BOMBS = 40;
 let flagsCounter = 0;
 let timer = 0;
 let gameOver = false;
@@ -32,7 +32,7 @@ for (let y = 0; y < fields.length; y++) {
         let field = document.createElement('button');
         field.className = 'field';
         field.style.backgroundColor = 'gray';
-        // campos seram postos de acordo como eles permanecem dentro da nossa array
+        // campos serão postos de acordo como eles permanecem dentro dessa array
         field.onmousedown = (event) => uncover(x, y, event.which);
 
         fields[y][x] = {
@@ -176,14 +176,15 @@ function uncover(x, y, which) {
 
         field.element.innerHTML = 'X';
         gameOver = true;
-        clearInterval(timer);
-        console.log(timer);
-        timer = 0;
 
         flagBombs.style.color = 'red';
         timerLabel.style.color = 'red';
         flagBombs.style.fontWeight = 'bold';
         timerLabel.style.fontWeight = 'bold';
+
+        clearInterval(timer);
+        console.log(timer);
+        timer = 0;
 
         return;
     }
